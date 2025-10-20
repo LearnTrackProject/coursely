@@ -150,13 +150,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         MainButton(
                           text: 'Create Account',
                           onPressed: () {
-                            isChecked
-                                ? () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Checked')),
-                                    );
-                                  }
-                                : null;
+                            // isChecked
+                            //     ? () {
+                            //         ScaffoldMessenger.of(context).showSnackBar(
+                            //           SnackBar(content: Text('Checked')),
+                            //         );
+                            //       }
+                            //     : null;
                           },
                         ),
                         Gap(17),
