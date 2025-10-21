@@ -1,3 +1,5 @@
+import 'package:coursely/core/constants/app_font.dart';
+import 'package:coursely/core/constants/routes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,6 +11,10 @@ class Coursely extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: AppFont.poppins),
+      routerConfig: Routes.routes,
+    );
   }
 }
