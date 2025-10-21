@@ -1,3 +1,4 @@
+import 'package:coursely/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,6 +10,12 @@ class Coursely extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.backGroundColor,
+        appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.backGroundColor,),),
+    );
   }
 }
