@@ -12,9 +12,11 @@ class AppColors {
   static const Color darkgrey = Color(0xff707070);
   static const Color lightPurple = Color(0xFFEFE0FF);
   static const Color mediumGray = Color(0xFFC4C4C4);
+  static const Color darkPurple = Color(0xFF440687);
   static const Color lightSkyBlue = Color(0xFFBAD6FF);
   static const Color softPink = Color(0xFFFFE7EE);
   static const Color mintGreen = Color(0xFFBAE0DB);
+  static const Color textformfill = Color(0xFFF4F3FD);
   static const Gradient lightOrange = LinearGradient(
     colors: [Color(0xffFFFFFF), Color(0xffFF5106)],
   );

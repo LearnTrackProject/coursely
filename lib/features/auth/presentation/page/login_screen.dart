@@ -51,6 +51,7 @@ class _buildLoginBody extends StatelessWidget {
                         'Log In',
                         style: TextStyles.textStyle30.copyWith(
                           color: AppColors.secondaryColor,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -125,13 +126,13 @@ class _buildLoginBody extends StatelessWidget {
                         },
                         text: 'Log In',
                       ),
-                      Gap(26),
+                      Gap(17),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Don't have an account?",
-                            style: TextStyles.textStyle15.copyWith(
+                            style: TextStyles.textStyle12.copyWith(
                               color: AppColors.gryColor,
                             ),
                           ),

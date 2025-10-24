@@ -1,4 +1,3 @@
-
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 class MainButton extends StatelessWidget {
   const MainButton({
     super.key,
+    this.style = TextStyles.textStyle16,
     required this.text,
     required this.onPressed,
     this.width = double.infinity,
@@ -17,6 +17,7 @@ class MainButton extends StatelessWidget {
 
   final String text;
   final Function() onPressed;
+  final TextStyle? style;
   final double width;
   final double height;
   final Color bgColor;
@@ -30,15 +31,14 @@ class MainButton extends StatelessWidget {
       height: height,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          
+          padding: EdgeInsets.zero,
           backgroundColor: bgColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyles.textStyle16.copyWith(color: textColor),
-        ),
+        child: Text(text, style: style?.copyWith(color: textColor)),
       ),
     );
   }

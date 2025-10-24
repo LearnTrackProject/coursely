@@ -51,12 +51,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               'Sign Up',
                               style: TextStyles.textStyle30.copyWith(
                                 color: AppColors.secondaryColor,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             Text(
                               'Enter your details below & free sign up',
                               style: TextStyles.textStyle12.copyWith(
-                                color: AppColors.borderColor,
+                                color: AppColors.gryColor,
                               ),
                             ),
                           ],
@@ -127,28 +128,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             hintText: 'Password',
                           ),
                           Gap(15),
-                          Text(
-                            'Confirm Password',
-                            style: TextStyles.textStyle14.copyWith(
-                              color: AppColors.darkgrey,
-                            ),
-                          ),
-                          PasswordTextFormField(
-                            controller: TextEditingController(),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              } else if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                            hintText: 'Confirmation password',
-                          ),
+                          // Text(
+                          //   'Confirm Password',
+                          //   style: TextStyles.textStyle14.copyWith(
+                          //     color: AppColors.darkgrey,
+                          //   ),
+                          // ),
+                          // PasswordTextFormField(
+                          //   controller: TextEditingController(),
+                          //   validator: (value) {
+                          //     if (value == null || value.isEmpty) {
+                          //       return 'Please enter your password';
+                          //     } else if (value.length < 6) {
+                          //       return 'Password must be at least 6 characters';
+                          //     }
+                          //     return null;
+                          //   },
+                          //   hintText: 'Confirmation password',
+                          // ),
                           Gap(34),
                           MainButton(
                             text: 'Create Account',
                             onPressed: () {
+                              Navigation.pushNamedandRemoveUntilTo(
+                                context,
+                                Routes.mainScreen,
+                              );
                               // isChecked
                               //     ? () {
                               //         ScaffoldMessenger.of(context).showSnackBar(

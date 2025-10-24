@@ -1,9 +1,8 @@
-import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/core/constants/navigation.dart';
 import 'package:coursely/core/constants/routes.dart';
+import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToOnboarding() {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 6), () {
       if (mounted) {
         // context.go('/onboarding');
         Navigation.pushNamedandRemoveUntilTo(context, Routes.onboardScreen);
@@ -50,10 +49,10 @@ class _SplashScreenState extends State<SplashScreen> {
               const SizedBox(height: 16),
               _buildSubtitle(),
               const SizedBox(height: 30),
-              const CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2,
-              ),
+              // const CircularProgressIndicator(
+              //   color: Colors.white,
+              //   strokeWidth: 2,
+              // ),
             ],
           ),
         ),
@@ -62,11 +61,26 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Widget _buildLogo() {
-    return Image.asset(
-      "assets/images/icon.png",
-      width: 222,
-      height: 222,
-      filterQuality: FilterQuality.medium,
+    return Stack(
+      children: [
+        Positioned(
+          left: MediaQuery.of(context).size.width * 0.15,
+          top: MediaQuery.of(context).size.width * 0.15,
+
+          child: Container(
+            color: AppColors.backGroundColor,
+            height: 100,
+            width: 100,
+          ),
+        ),
+
+        Image.asset(
+          "assets/images/icon.png",
+          width: 222,
+          height: 222,
+          filterQuality: FilterQuality.medium,
+        ),
+      ],
     );
   }
 

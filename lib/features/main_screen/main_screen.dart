@@ -1,5 +1,9 @@
 import 'package:coursely/core/utils/app_colors.dart';
+import 'package:coursely/features/account/presentation/page/account_page.dart';
+import 'package:coursely/features/course/presentation/page/course_page.dart';
 import 'package:coursely/features/home/presentation/page/home_screen.dart';
+import 'package:coursely/features/message/presentation/pages/message_page.dart';
+import 'package:coursely/features/search/presentation/view/search_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +21,10 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     screens = [
       HomeScreen(),
-      Center(child: Text("screen2")),
-      Center(child: Text("screen3")),
-      Center(child: Text("screen4")),
-      Center(child: Text("screen5")),
+      CoursePage(),
+      SearchPage(),
+      MessagePage(),
+      AccountScreen(),
     ];
     super.initState();
   }

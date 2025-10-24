@@ -2,7 +2,6 @@
 import 'package:coursely/core/constants/navigation.dart';
 import 'package:coursely/core/constants/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
