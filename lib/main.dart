@@ -19,7 +19,7 @@ class Coursely extends StatelessWidget {
         scaffoldBackgroundColor: AppColors.backGroundColor,
         appBarTheme: AppBarTheme(
           surfaceTintColor: Colors.transparent,
-          backgroundColor: AppColors.backGroundColor,
+          backgroundColor: AppColors.lightGrey,
         ),
         fontFamily: AppFont.poppins,
         textButtonTheme: TextButtonThemeData(

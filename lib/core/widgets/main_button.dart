@@ -1,4 +1,3 @@
-
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -29,15 +28,21 @@ class MainButton extends StatelessWidget {
       width: width,
       height: height,
       child: ElevatedButton(
+        
         style: ElevatedButton.styleFrom(
           
           backgroundColor: bgColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         onPressed: onPressed,
         child: Text(
           text,
-          style: TextStyles.textStyle16.copyWith(color: textColor),
+          style: TextStyles.textStyle16.copyWith(
+            color: textColor,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
