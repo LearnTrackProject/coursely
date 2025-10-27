@@ -1,11 +1,7 @@
 import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
-import 'package:coursely/core/widgets/custom_container.dart';
-import 'package:coursely/core/widgets/custom_rich_text.dart';
 import 'package:coursely/core/widgets/custom_text_field.dart';
-import 'package:coursely/core/widgets/main_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 

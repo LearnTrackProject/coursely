@@ -106,10 +106,7 @@ class _buildLoginBody extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            Navigation.pushNamedTo(
-                              context,
-                              Routes.forgetPasswordScreen,
-                            );
+                            Navigation.pushNamedTo(context, Routes.phoneLogin);
                           },
                           child: Text(
                             "Forget Password?",

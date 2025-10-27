@@ -33,8 +33,10 @@ class MainButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           backgroundColor: bgColor,
+
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: borderColor ?? Colors.transparent),
           ),
         ),
         onPressed: onPressed,

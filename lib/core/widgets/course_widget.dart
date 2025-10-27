@@ -2,6 +2,7 @@ import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:coursely/core/widgets/custom_container.dart';
+import 'package:coursely/features/course_details/screens/course_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -26,7 +27,19 @@ class CourseWidget extends StatelessWidget {
         color: AppColors.backGroundColor,
 
         child: ListTile(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseDetailScreen(
+                  title: "Product Design v1.0",
+                  imageUrl: AppImages.image6,
+                  price: 190,
+                  heroTag: 'course_image',
+                ),
+              ),
+            );
+          },
 
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(5),
