@@ -6,8 +6,7 @@ import 'package:coursely/core/utils/text_styles.dart';
 import 'package:coursely/core/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
+ import 'package:gap/gap.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
