@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 "Learned today",
                                 style: TextStyles.textStyle12.copyWith(
-                                  color: AppColors.gryColor,
+                                  color: AppColors.primaryColor,
                                 ),
                               ),
                               Text(
