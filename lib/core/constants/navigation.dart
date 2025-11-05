@@ -7,7 +7,7 @@ class Navigation {
     String screenPage, [
     Object? extra,
   ]) {
-    context.pushReplacement(screenPage);
+    context.pushReplacement(screenPage,extra:extra);
   }
 
   static pushNamedTo(

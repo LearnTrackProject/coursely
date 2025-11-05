@@ -6,7 +6,6 @@ import 'package:coursely/core/utils/text_styles.dart';
 import 'package:coursely/core/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
@@ -50,7 +49,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
               decoration: BoxDecoration(color: AppColors.lightGrey),
               width: double.infinity,
               height: 130,
-              child: Container(child: Image.asset(AppImages.image4)),
+              child: Image.asset(AppImages.image4),
             ),
             Gap(40),
             Expanded(
@@ -81,7 +80,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                             children: [
                               Expanded(
                                 flex: 2,
-                                child: IntlPhoneField(
+                                child: IntlPhoneField( 
                                   focusNode: focusNode,
                                   decoration: InputDecoration(
                                     labelText: 'Phone Number',

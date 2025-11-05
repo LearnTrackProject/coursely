@@ -41,12 +41,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      Navigation.pushNamedandRemoveUntilTo(context, Routes.loginScreen);
+      Navigation.pushNamedandRemoveUntilTo(context, Routes.welcome);
     }
   }
 
   void _skipOnboarding() {
-    Navigation.pushNamedandRemoveUntilTo(context, Routes.loginScreen);
+    Navigation.pushNamedandRemoveUntilTo(context, Routes.welcome);
   }
 
   @override

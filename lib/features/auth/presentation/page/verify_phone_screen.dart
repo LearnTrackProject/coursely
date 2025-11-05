@@ -1,4 +1,3 @@
-import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/core/constants/navigation.dart';
 import 'package:coursely/core/constants/routes.dart';
 import 'package:coursely/core/utils/app_colors.dart';

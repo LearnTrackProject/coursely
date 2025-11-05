@@ -17,187 +17,182 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool isChecked = false;
-  // var emailController = TextEditingController();
-  // var passwordController = TextEditingController();
-  // var confirmPasswordController = TextEditingController();
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Form(
-            child: Column(
+      backgroundColor: AppColors.lightGrey,
+      body: SafeArea(child: _BuildRegisterBody(isChecked, onCheckChanged)),
+    );
+  }
+
+  void onCheckChanged(bool? value) {
+    setState(() {
+      isChecked = value ?? false;
+    });
+  }
+}
+
+class _BuildRegisterBody extends StatelessWidget {
+  final bool isChecked;
+  final Function(bool?) onCheckChanged;
+
+  const _BuildRegisterBody(this.isChecked, this.onCheckChanged);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Form(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(padding: EdgeInsetsGeometry.symmetric(vertical: 30)),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Sign Up',
+                    style: TextStyles.textStyle30.copyWith(
+                      color: AppColors.secondaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Enter your details below & create a free account',
+                    style: TextStyles.textStyle12.copyWith(
+                      color: AppColors.gryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(bottom: 20, left: 24, top: 60),
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.lightGrey,
+                  height: MediaQuery.sizeOf(context).height,
+                  decoration: const BoxDecoration(
+                    color: AppColors.backGroundColor,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Full Name',
+                          style: TextStyles.textStyle14.copyWith(
+                            color: AppColors.darkgrey,
+                          ),
+                        ),
+                        CustomTextFormField(
+                          controller: TextEditingController(),
+                          hintText: 'Enter your name',
+                        ),
+                        const Gap(25),
+                        Text(
+                          'Email',
+                          style: TextStyles.textStyle14.copyWith(
+                            color: AppColors.darkgrey,
+                          ),
+                        ),
+                        CustomTextFormField(
+                          controller: TextEditingController(),
+                          hintText: 'Enter your email',
+                        ),
+                        const Gap(25),
+                        Text(
+                          'Password',
+                          style: TextStyles.textStyle14.copyWith(
+                            color: AppColors.darkgrey,
+                          ),
+                        ),
+                        PasswordTextFormField(
+                          controller: TextEditingController(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            } else if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
+                          },
+                          hintText: 'Enter password',
+                        ),
+                        const Gap(25),
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Sign Up',
-                              style: TextStyles.textStyle30.copyWith(
-                                color: AppColors.secondaryColor,
-                                fontWeight: FontWeight.w500,
+                            Checkbox(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
                               ),
+                              value: isChecked,
+                              onChanged: onCheckChanged,
                             ),
-                            Text(
-                              'Enter your details below & free sign up',
-                              style: TextStyles.textStyle12.copyWith(
-                                color: AppColors.gryColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.backGroundColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 32,
-                        right: 24,
-                        left: 24,
-                        bottom: 24,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Enter Name',
-                            style: TextStyles.textStyle14.copyWith(
-                              color: AppColors.darkgrey,
-                            ),
-                          ),
-                          CustomTextFormField(
-                            controller: TextEditingController(),
-                            hintText: 'Enter Name',
-                          ),
-                          Gap(25),
-                          Text(
-                            'Enter Email',
-                            style: TextStyles.textStyle14.copyWith(
-                              color: AppColors.darkgrey,
-                            ),
-                          ),
-                          CustomTextFormField(
-                            controller: TextEditingController(),
-                            hintText: 'Enter Email',
-                          ),
-                          Gap(13),
-                          Text(
-                            'Enter Password',
-                            style: TextStyles.textStyle14.copyWith(
-                              color: AppColors.darkgrey,
-                            ),
-                          ),
-                          PasswordTextFormField(
-                            controller: TextEditingController(),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              } else if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                            hintText: 'Password',
-                          ),
-                          Gap(15),
-                          // Text(
-                          //   'Confirm Password',
-                          //   style: TextStyles.textStyle14.copyWith(
-                          //     color: AppColors.darkgrey,
-                          //   ),
-                          // ),
-                          // PasswordTextFormField(
-                          //   controller: TextEditingController(),
-                          //   validator: (value) {
-                          //     if (value == null || value.isEmpty) {
-                          //       return 'Please enter your password';
-                          //     } else if (value.length < 6) {
-                          //       return 'Password must be at least 6 characters';
-                          //     }
-                          //     return null;
-                          //   },
-                          //   hintText: 'Confirmation password',
-                          // ),
-                          Gap(34),
-                          MainButton(
-                            text: 'Create Account',
-                            onPressed: () {
-                              Navigation.pushNamedandRemoveUntilTo(
-                                context,
-                                Routes.mainScreen,
-                              );
-                              // isChecked
-                              //     ? () {
-                              //         ScaffoldMessenger.of(context).showSnackBar(
-                              //           SnackBar(content: Text('Checked')),
-                              //         );
-                              //       }
-                              //     : null;
-                            },
-                          ),
-                          Gap(17),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    5,
-                                  ),
-                                ),
-                                value: isChecked,
-                                onChanged: (value) {
-                                  isChecked = value!;
-
-                                  setState(() {});
-                                },
-                              ),
-
-                              Text(
-                                'By creating an account you have to agree\n with our them & condication.',
+                            Expanded(
+                              child: Text(
+                                'By creating an account you agree to our Terms & Conditions.',
                                 style: TextStyles.textStyle12.copyWith(
                                   color: AppColors.gryColor,
                                 ),
                               ),
-                            ],
-                          ),
-                          Gap(25),
-                          Row(
+                            ),
+                          ],
+                        ),
+                        const Gap(25),
+                        MainButton(
+                          text: 'Create Account',
+                          onPressed: () {
+                            if (!isChecked) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Please agree to the terms before continuing.',
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            Navigation.pushNamedandRemoveUntilTo(
+                              context,
+                              Routes.mainScreen,
+                            );
+                          },
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(22),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 "Already have an account?",
-                                style: TextStyles.textStyle15.copyWith(
-                                  color: AppColors.gryColor,
-                                ),
+                                style: TextStyles.textStyle15,
                               ),
                               TextButton(
                                 onPressed: () {
@@ -207,7 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   );
                                 },
                                 child: Text(
-                                  "Log in",
+                                  "Log In",
                                   style: TextStyles.textStyle15.copyWith(
                                     color: AppColors.primaryColor,
                                   ),
@@ -215,14 +210,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        Spacer(),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

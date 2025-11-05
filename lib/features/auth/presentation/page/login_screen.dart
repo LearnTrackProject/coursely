@@ -6,191 +6,187 @@ import 'package:coursely/core/widgets/custom_text_field.dart';
 import 'package:coursely/core/widgets/main_button.dart';
 import 'package:coursely/core/widgets/password_text_form_field.dart';
 import 'package:coursely/core/utils/text_styles.dart';
+import 'package:coursely/features/auth/data/models/user_type_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-  // var emailController = TextEditingController();
-  // var passwordController = TextEditingController();
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key, required this.userType});
+  final UserTypeEnum userType;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: _buildLoginBody());
-  }
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// ignore: camel_case_types
-class _buildLoginBody extends StatelessWidget {
-  const _buildLoginBody();
+class _LoginScreenState extends State<LoginScreen> {
+  String handleUserType() {
+    return widget.userType == UserTypeEnum.teacher ? 'Teacher' : 'Student';
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Form(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(bottom: 24, left: 24),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGrey,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        'Log In',
-                        style: TextStyles.textStyle30.copyWith(
-                          color: AppColors.secondaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+    return Material(
+      color: AppColors.lightGrey,
+      child: SingleChildScrollView(
+        child: Form(
+          child: Column(
+            children: [
+              Padding(padding: EdgeInsetsGeometry.symmetric(vertical: 30)),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    'Log In As ${handleUserType()} ',
+                    style: TextStyles.textStyle30.copyWith(
+                      color: AppColors.secondaryColor,
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.backGroundColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 32,
-                    right: 24,
-                    left: 24,
-                    bottom: 24,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Your Email',
-                        style: TextStyles.textStyle14.copyWith(
-                          color: AppColors.darkgrey,
-                        ),
+              Stack(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: AppColors.backGroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
                       ),
-                      CustomTextFormField(
-                        controller: TextEditingController(),
-                        hintText: 'Enter Email',
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 32,
+                        right: 24,
+                        left: 24,
+                        bottom: 24,
                       ),
-                      Gap(25),
-                      Text(
-                        'Password',
-                        style: TextStyles.textStyle14.copyWith(
-                          color: AppColors.darkgrey,
-                        ),
-                      ),
-                      PasswordTextFormField(
-                        controller: TextEditingController(),
-                        hintText: 'Enter Password',
-                      ),
-                      Gap(13),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigation.pushNamedTo(context, Routes.phoneLogin);
-                          },
-                          child: Text(
-                            "Forget Password?",
-                            style: TextStyles.textStyle14.copyWith(
-                              color: AppColors.gryColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Gap(13),
-                      MainButton(
-                        onPressed: () {
-                          Navigation.pushNamedTo(context, Routes.mainScreen);
-                        },
-                        text: 'Log In',
-                      ),
-                      Gap(17),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Don't have an account?",
-                            style: TextStyles.textStyle12.copyWith(
-                              color: AppColors.gryColor,
+                            'Your Email',
+                            style: TextStyles.textStyle14.copyWith(
+                              color: AppColors.darkgrey,
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigation.pushReplacementNamed(
-                                context,
-                                Routes.registerScreen,
-                              );
-                            },
-                            child: Text(
-                              "Sign Up",
-                              style: TextStyles.textStyle15.copyWith(
-                                color: AppColors.primaryColor,
+                          CustomTextFormField(
+                            controller: TextEditingController(),
+                            hintText: 'Enter Email',
+                          ),
+                          Gap(25),
+                          Text(
+                            'Password',
+                            style: TextStyles.textStyle14.copyWith(
+                              color: AppColors.darkgrey,
+                            ),
+                          ),
+                          PasswordTextFormField(
+                            controller: TextEditingController(),
+                            hintText: 'Enter Password',
+                          ),
+                          Gap(13),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigation.pushNamedTo(
+                                  context,
+                                  Routes.phoneLogin,
+                                );
+                              },
+                              child: Text(
+                                "Forget Password?",
+                                style: TextStyles.textStyle14.copyWith(
+                                  color: AppColors.gryColor,
+                                ),
                               ),
                             ),
                           ),
+                          Gap(13),
+                          MainButton(
+                            onPressed: () {
+                              Navigation.pushReplacementNamed(
+                                context,
+                                Routes.mainScreen,
+                              );
+                            },
+                            text: 'Log In',
+                          ),
+                          Gap(26),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Don't have an account?",
+                                style: TextStyles.textStyle15.copyWith(
+                                  color: AppColors.gryColor,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigation.pushReplacementNamed(
+                                    context,
+                                    Routes.registerScreen,
+                                  );
+                                },
+                                child: Text(
+                                  "Sign Up",
+                                  style: TextStyles.textStyle15.copyWith(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(23),
+                          Row(
+                            children: [
+                              Expanded(child: Divider()),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Text(
+                                  'Or login With',
+                                  style: TextStyles.textStyle12,
+                                ),
+                              ),
+                              Expanded(child: Divider()),
+                            ],
+                          ),
+                          Gap(21),
+                          Row(
+                            children: [
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {},
+                                icon: SvgPicture.asset(
+                                  AppImages.googleSvg,
+                                  width: 36,
+                                ),
+                              ),
+                              Gap(36),
+                              IconButton(
+                                onPressed: () {},
+                                icon: SvgPicture.asset(
+                                  AppImages.facebookSvg,
+                                  width: 36,
+                                ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
                         ],
                       ),
-                      Gap(23),
-                      Row(
-                        children: [
-                          Expanded(child: Divider()),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              'Or login With',
-                              style: TextStyles.textStyle12,
-                            ),
-                          ),
-                          Expanded(child: Divider()),
-                        ],
-                      ),
-                      Gap(21),
-                      Row(
-                        children: [
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset(
-                              AppImages.googleSvg,
-                              width: 36,
-                            ),
-                          ),
-                          Gap(36),
-                          IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset(
-                              AppImages.facebookSvg,
-                              width: 36,
-                            ),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
