@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
 
+import 'package:gap/gap.dart';
+
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
 
@@ -80,7 +82,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                             children: [
                               Expanded(
                                 flex: 2,
-                                child: IntlPhoneField( 
+                                child: IntlPhoneField(
                                   focusNode: focusNode,
                                   decoration: InputDecoration(
                                     labelText: 'Phone Number',

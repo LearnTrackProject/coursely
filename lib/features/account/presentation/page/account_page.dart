@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:coursely/core/constants/app_images.dart';
-import 'package:coursely/core/utils/app_colors.dart';
+ import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
+ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../widgets/list_for_account.dart';
