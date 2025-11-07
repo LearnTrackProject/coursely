@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import '../../../../core/widgets/custom_container.dart';
@@ -38,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Hi, Kristin",
+                      FirebaseAuth.instance.currentUser?.displayName ?? "",
                       style: TextStyles.textStyle24.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.backGroundColor,

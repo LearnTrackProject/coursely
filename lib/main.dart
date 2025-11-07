@@ -1,9 +1,13 @@
 import 'package:coursely/core/constants/app_font.dart';
 import 'package:coursely/core/constants/routes.dart';
 import 'package:coursely/core/utils/app_colors.dart';
+import 'package:coursely/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const Coursely());
 }
 

@@ -1,5 +1,6 @@
 import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/features/auth/data/models/user_type_enum.dart';
+import 'package:coursely/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:coursely/features/auth/presentation/page/completed_registeration_screen.dart';
 import 'package:coursely/features/auth/presentation/page/login_with_phone.dart';
 import 'package:coursely/features/auth/presentation/page/login_screen.dart';
@@ -9,6 +10,7 @@ import 'package:coursely/features/course_details/screens/course_detail_screen.da
 import 'package:coursely/features/main_screen/main_screen.dart';
 import 'package:coursely/features/intro/onboard_screen/onboarding_screen.dart';
 import 'package:coursely/features/intro/splash_screen/splash_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coursely/features/welcome/welcome_screen.dart';
 
@@ -86,7 +88,10 @@ class Routes {
       GoRoute(
         path: loginScreen,
         builder: (context, state) {
-          return LoginScreen(userType: state.extra as UserTypeEnum);
+          return BlocProvider(
+            create: (context) => AuthCubit(),
+            child: LoginScreen(userType: state.extra as UserTypeEnum),
+          );
         },
       ),
 
@@ -99,7 +104,10 @@ class Routes {
       GoRoute(
         path: registerScreen,
         builder: (context, state) {
-          return RegisterScreen();
+          return BlocProvider(
+            create: (context) => AuthCubit(),
+            child: RegisterScreen(person: state.extra as UserTypeEnum),
+          );
         },
       ),
     ],
