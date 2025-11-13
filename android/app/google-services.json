@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "454697089013",
+    "project_id": "coursely-bf217",
+    "storage_bucket": "coursely-bf217.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454697089013:android:44dffaaa92f7f9d70452bc",
+        "android_client_info": {
+          "package_name": "com.debi.coursely"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6QdquWBPpoAs9EFQULwNCkE0LS_3NsU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454697089013:android:51e3819760f874720452bc",
+        "android_client_info": {
+          "package_name": "com.example.coursely"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6QdquWBPpoAs9EFQULwNCkE0LS_3NsU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
