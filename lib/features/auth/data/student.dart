@@ -9,6 +9,7 @@ class Student {
   String? bio;
   String? city;
   String? userKind;
+  List<String>? enrolledCourses;
 
   Student({
     this.name,
@@ -21,6 +22,7 @@ class Student {
     this.city,
     this.gender,
     this.userKind,
+    this.enrolledCourses,
   });
 
   Student.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,13 @@ class Student {
     gender = json['gender'];
     age = json['age'];
     userKind = json['user_kind'];
+    if (json['enrolledCourses'] is List) {
+      enrolledCourses = List<String>.from(
+        (json['enrolledCourses'] as List).map((e) => e.toString()),
+      );
+    } else {
+      enrolledCourses = [];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +57,7 @@ class Student {
       'gender': gender,
       'age': age,
       'user_kind': userKind,
+      'enrolledCourses': enrolledCourses ?? [],
     };
   }
 
@@ -62,6 +72,7 @@ class Student {
     if (gender != null) data['gender'] = gender;
     if (age != null) data['age'] = age;
     if (userKind != null) data['user_kind'] = userKind;
+    if (enrolledCourses != null) data['enrolledCourses'] = enrolledCourses;
     return data;
   }
 }

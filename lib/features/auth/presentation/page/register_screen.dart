@@ -73,7 +73,7 @@ class _BuildRegisterBody extends StatelessWidget {
           } else {
             Navigation.pushNamedandRemoveUntilTo(
               context,
-              Routes.mainScreen,
+              Routes.instructorDashboard,
             ); //instructor screen
           }
         } else if (state is AuthErrorState) {

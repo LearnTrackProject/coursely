@@ -38,11 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
           if (cubit.userKind == "student" &&
               widget.userType == UserTypeEnum.student) {
             Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
-          } else {
+          } else if (cubit.userKind == "teacher" &&
+              widget.userType == UserTypeEnum.teacher) {
             Navigation.pushNamedandRemoveUntilTo(
               context,
-              Routes.mainScreen,
-            ); // screen of instructor
+              Routes.instructorDashboard,
+            );
+          } else {
+            Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
           }
         } else if (state is AuthErrorState) {
           Navigation.pop(context);

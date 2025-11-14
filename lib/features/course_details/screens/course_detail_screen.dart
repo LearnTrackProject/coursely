@@ -1,7 +1,10 @@
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/features/course_details/widgets/lesson_title.dart';
+import 'package:coursely/features/course/presentation/page/course_page.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/about_card.dart';
 import '../models/lesson.dart';
 
@@ -10,6 +13,7 @@ class CourseDetailScreen extends StatefulWidget {
   final String? imageUrl;
   final double? price;
   final String? heroTag;
+  final String? courseId;
 
   const CourseDetailScreen({
     super.key,
@@ -17,6 +21,7 @@ class CourseDetailScreen extends StatefulWidget {
     this.imageUrl,
     this.price,
     this.heroTag,
+    this.courseId,
   });
 
   @override
@@ -24,34 +29,110 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
-  final List<Lesson> lessons = [
-    Lesson(
-      index: 1,
-      title: 'Welcome to the Course',
-      duration: '6:10',
-      sampleUrl: 'https://www.youtube.com/watch?v=MDQkkCkSxWI',
-      locked: false,
-    ),
-    Lesson(
-      index: 2,
-      title: 'Process Overview',
-      duration: '8:15',
-      sampleUrl: 'https://www.youtube.com/watch?v=LkX8acAE8_A',
-      locked: false,
-    ),
-    Lesson(
-      index: 2,
-      title: 'ui ux ',
-      duration: '8:15',
-      sampleUrl: 'https://www.youtube.com/watch?v=MDQkkCkSxWI',
-      locked: true,
-    ),
-  ];
+  List<Lesson> lessons = [];
 
   bool isFavorite = false;
   YoutubePlayerController? _controller;
   bool _isVideoPlaying = false;
   String? _currentVideoId;
+  bool _isEnrolled = false;
+  bool _isEnrolling = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkEnrollmentStatus();
+    _setupEnrollmentListener();
+  }
+
+  void _setupEnrollmentListener() {
+    if (widget.courseId == null) return;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      FirebaseFirestore.instance
+          .collection('student')
+          .doc(uid)
+          .snapshots()
+          .listen((doc) {
+            if (doc.exists && doc.data()?['enrolledCourses'] is List) {
+              final enrolledCourses = doc.data()!['enrolledCourses'] as List;
+              if (mounted) {
+                setState(() {
+                  _isEnrolled = enrolledCourses.contains(widget.courseId);
+                });
+              }
+            }
+          });
+    }
+  }
+
+  Future<void> _checkEnrollmentStatus() async {
+    if (widget.courseId == null) return;
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        final doc = await FirebaseFirestore.instance
+            .collection('student')
+            .doc(uid)
+            .get();
+        if (doc.exists && doc.data()?['enrolledCourses'] is List) {
+          final enrolledCourses = doc.data()!['enrolledCourses'] as List;
+          if (mounted) {
+            setState(() {
+              _isEnrolled = enrolledCourses.contains(widget.courseId);
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error checking enrollment: $e');
+    }
+  }
+
+  Future<void> _enrollCourse() async {
+    if (widget.courseId == null) return;
+    setState(() {
+      _isEnrolling = true;
+    });
+
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Please login first')));
+        }
+        return;
+      }
+
+      await FirebaseFirestore.instance.collection('student').doc(uid).update({
+        'enrolledCourses': FieldValue.arrayUnion([widget.courseId]),
+      });
+
+      if (mounted) {
+        setState(() {
+          _isEnrolled = true;
+          _isEnrolling = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Successfully enrolled in course!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isEnrolling = false;
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error enrolling: $e')));
+      }
+    }
+  }
 
   void _toggleVideo(String url) {
     if (_currentVideoId == url && _isVideoPlaying) {
@@ -200,22 +281,52 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _isEnrolling || _isEnrolled
+                          ? null
+                          : _enrollCourse,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
+                        backgroundColor: _isEnrolled
+                            ? Colors.green
+                            : AppColors.primaryColor,
+                        disabledBackgroundColor: _isEnrolled
+                            ? Colors.green.withValues(alpha: 0.8)
+                            : AppColors.primaryColor.withValues(alpha: 0.6),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'Buy Now',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: _isEnrolling
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (_isEnrolled) ...[
+                                  const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                                Text(
+                                  _isEnrolled ? 'Enrolled' : 'Enroll Now',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                 ],

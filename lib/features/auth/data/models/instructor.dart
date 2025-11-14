@@ -13,6 +13,7 @@ class Instructor {
   int? rating;
   bool? completeDataRegister;
   String? userKind;
+  List<Map<String, dynamic>>? courses;
 
   Instructor({
     this.address,
@@ -29,6 +30,7 @@ class Instructor {
     this.uid,
     this.completeDataRegister,
     this.userKind,
+    this.courses,
   });
 
   Instructor.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,13 @@ class Instructor {
     specialization = json["specialization"];
     completeDataRegister = json["complete_register"];
     userKind = json["user_kind"];
+    if (json["courses"] is List) {
+      courses = List<Map<String, dynamic>>.from(
+        (json["courses"] as List).map(
+          (e) => e is Map ? e : <String, dynamic>{},
+        ),
+      );
+    }
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{
@@ -63,6 +72,7 @@ class Instructor {
       "specialization": specialization,
       "complete_register": completeDataRegister,
       "user_kind": userKind,
+      if (courses != null) "courses": courses,
     };
     return data;
   }
@@ -84,6 +94,7 @@ class Instructor {
         "complete_register": completeDataRegister,
       if (specialization != null) "specialization": specialization,
       if (userKind != null) "user_kind": userKind,
+      if (courses != null) "courses": courses,
     };
     return data;
   }

@@ -2,6 +2,8 @@ import 'package:coursely/core/constants/navigation.dart';
 import 'package:coursely/core/constants/routes.dart';
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:coursely/core/utils/text_styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,10 +22,35 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  void _navigateToOnboarding() {
-    Future.delayed(const Duration(seconds: 6), () {
-      if (mounted) {
-        // context.go('/onboarding');
+  void _navigateToOnboarding() async {
+    Future.delayed(const Duration(seconds: 3), () async {
+      if (!mounted) return;
+
+      final hasUser = FirebaseAuth.instance.currentUser != null;
+      if (hasUser) {
+        // Check if user is instructor or student
+        final uid = FirebaseAuth.instance.currentUser?.uid;
+        if (uid != null) {
+          try {
+            final instDoc = await FirebaseFirestore.instance
+                .collection('instructor')
+                .doc(uid)
+                .get();
+            if (instDoc.exists) {
+              Navigation.pushNamedandRemoveUntilTo(
+                context,
+                Routes.instructorDashboard,
+              );
+            } else {
+              Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
+            }
+          } catch (e) {
+            Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
+          }
+        } else {
+          Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
+        }
+      } else {
         Navigation.pushNamedandRemoveUntilTo(context, Routes.onboardScreen);
       }
     });

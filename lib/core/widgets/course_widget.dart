@@ -8,7 +8,20 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class CourseWidget extends StatelessWidget {
-  const CourseWidget({super.key});
+  final String? title;
+  final String? imageUrl;
+  final double? price;
+  final String? heroTag;
+  final String? courseId;
+
+  const CourseWidget({
+    super.key,
+    this.title,
+    this.imageUrl,
+    this.price,
+    this.heroTag,
+    this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +45,11 @@ class CourseWidget extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => CourseDetailScreen(
-                  title: "Product Design v1.0",
-                  imageUrl: AppImages.image6,
-                  price: 190,
-                  heroTag: 'course_image',
+                  title: title ?? 'Course',
+                  imageUrl: imageUrl,
+                  price: price,
+                  heroTag: heroTag ?? title ?? 'course_image',
+                  courseId: courseId,
                 ),
               ),
             );
@@ -43,53 +57,80 @@ class CourseWidget extends StatelessWidget {
 
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Image.asset(AppImages.image6),
+            child: (imageUrl != null && imageUrl!.startsWith('http'))
+                ? Image.network(
+                    imageUrl!,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    imageUrl ?? AppImages.image6,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
           ),
           title: Padding(
             padding: const EdgeInsets.only(left: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Product Design v1.0", style: TextStyles.textStyle14),
+                Text(
+                  title ?? "Product Design v1.0",
+                  style: TextStyles.textStyle14,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       CupertinoIcons.person_fill,
                       color: AppColors.gryColor,
                       size: 15,
                     ),
-
-                    Text(
-                      "Robertson Connie",
-                      style: TextStyles.textStyle12.copyWith(
-                        color: AppColors.gryColor,
+                    Gap(4),
+                    Expanded(
+                      child: Text(
+                        "Robertson Connie",
+                        style: TextStyles.textStyle12.copyWith(
+                          color: AppColors.gryColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
                 ),
-
-                Row(
-                  children: [
-                    Text(
-                      "\$190",
-                      style: TextStyles.textStyle16.copyWith(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Gap(10),
-                    CustomContainer(
-                      padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                      color: AppColors.orange.withValues(alpha: 0.2),
-                      child: Text(
-                        "16 hours",
-                        style: TextStyles.textStyle12.copyWith(
-                          color: AppColors.orange,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        price != null
+                            ? "\$${price!.toStringAsFixed(0)}"
+                            : "\$190",
+                        style: TextStyles.textStyle16.copyWith(
+                          color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                      Gap(10),
+                      CustomContainer(
+                        padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                        color: AppColors.orange.withValues(alpha: 0.2),
+                        child: Text(
+                          "16 hours",
+                          style: TextStyles.textStyle12.copyWith(
+                            color: AppColors.orange,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

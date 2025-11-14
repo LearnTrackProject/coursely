@@ -3,6 +3,7 @@ import 'package:coursely/features/auth/data/models/user_type_enum.dart';
 import 'package:coursely/features/auth/data/student.dart';
 import 'package:coursely/features/auth/presentation/cubit/auth_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,6 +81,15 @@ class AuthCubit extends Cubit<AuthState> {
         //using updatePhotoUrl as a role
         FirebaseAuth.instance.currentUser?.updatePhotoURL("instructor");
       }
+      // persist login flag locally
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('is_logged_in', true);
+        await prefs.setString(
+          'user_kind',
+          userType == UserTypeEnum.student ? 'student' : 'instructor',
+        );
+      } catch (_) {}
       emit(AuthSuccessState());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -91,6 +101,20 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } catch (e) {
       emit(AuthErrorState("error please try again"));
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('is_logged_in');
+        await prefs.remove('user_kind');
+      } catch (_) {}
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthErrorState('Logout failed'));
     }
   }
 }

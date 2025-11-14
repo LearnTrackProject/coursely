@@ -8,6 +8,10 @@ import 'package:coursely/features/auth/presentation/page/register_screen.dart';
 import 'package:coursely/features/auth/presentation/page/verify_phone_screen.dart';
 import 'package:coursely/features/course_details/screens/course_detail_screen.dart';
 import 'package:coursely/features/main_screen/main_screen.dart';
+import 'package:coursely/features/instructor/presentation/page/instructor_dashboard.dart';
+import 'package:coursely/features/instructor/presentation/page/instructor_static_preview.dart';
+import 'package:coursely/features/instructor/presentation/cubit/instructor_cubit.dart';
+import 'package:coursely/features/course/data/repo/course_repository.dart';
 import 'package:coursely/features/intro/onboard_screen/onboarding_screen.dart';
 import 'package:coursely/features/intro/splash_screen/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +25,8 @@ class Routes {
   static const String registerScreen = "/register_screen";
   static const String loginScreen = "/login_screen";
   static const String mainScreen = "/main_Screen";
+  static const String instructorDashboard = "/instructor_dashboard";
+  static const String instructorStaticPreview = "/instructor_static_preview";
   static const String welcome = "/welcome";
   static const String courseDetailScreen = "/coursedetail_Screen";
   static const String verifyPhoneScreen = "/verifyPhone_Screen";
@@ -33,6 +39,22 @@ class Routes {
         path: mainScreen,
         builder: (context, state) {
           return MainScreen();
+        },
+      ),
+      GoRoute(
+        path: instructorDashboard,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (_) =>
+                InstructorCubit(CourseRepository())..loadInstructorProfile(),
+            child: InstructorDashboard(),
+          );
+        },
+      ),
+      GoRoute(
+        path: instructorStaticPreview,
+        builder: (context, state) {
+          return InstructorStaticPreview();
         },
       ),
       GoRoute(

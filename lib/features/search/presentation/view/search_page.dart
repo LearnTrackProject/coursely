@@ -7,99 +7,166 @@ import 'package:coursely/core/widgets/custom_text_field.dart';
 import 'package:coursely/core/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:coursely/features/search/presentation/cubit/search_cubit.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Icon(Icons.dark_mode),
-              ),
-              Gap(20),
-              CustomTextFormField(
-                hintText: "product Desin",
-                preffixIcon: Icon(Icons.search),
-
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.close),
-                    Gap(20),
-                    IconButton(
-                      icon: Icon(Icons.filter_alt_outlined),
-                      onPressed: () {
-                        showBottomSheet(
-                          backgroundColor: AppColors.backGroundColor,
-                          context: context,
-                          builder: (_) {
-                            return CustomButtonSheet();
-                          },
-                        );
-                      },
-                    ),
-                    Gap(20),
-                  ],
+        body: RefreshIndicator(
+          onRefresh: () async {
+            // Refresh search if there's a query
+            final q = _controller.text.trim();
+            if (q.isNotEmpty) {
+              await context.read<SearchCubit>().search(q);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(Icons.dark_mode),
                 ),
+                Gap(20),
+                CustomTextFormField(
+                  hintText: "product Design",
+                  preffixIcon: Icon(Icons.search),
 
-                controller: TextEditingController(text: "product design"),
-              ),
-              Gap(17),
-              Row(
-                children: [
-                  ...[
-                    {"title": "visual identity", "flex": 2},
-                    {"title": "painting", "flex": 1},
-                    {"title": "coding", "flex": 1},
-                    {"title": "Writing", "flex": 1},
-                  ].map(
-                    (json) => Expanded(
-                      flex: json["flex"] as int,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: CustomContainer(
-                          height: 40,
-                          color: AppColors.textformfill,
-                          child: Center(
-                            child: Text(
-                              json["title"] as String,
-                              style: TextStyles.textStyle12.copyWith(
-                                color: AppColors.darkgrey,
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // search action
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          final q = _controller.text.trim();
+                          context.read<SearchCubit>().search(q);
+                        },
+                      ),
+                      Gap(8),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          _controller.clear();
+                          context.read<SearchCubit>().search('');
+                        },
+                      ),
+                      Gap(8),
+                      IconButton(
+                        icon: Icon(Icons.filter_alt_outlined),
+                        onPressed: () {
+                          showBottomSheet(
+                            backgroundColor: AppColors.backGroundColor,
+                            context: context,
+                            builder: (_) {
+                              return CustomButtonSheet();
+                            },
+                          );
+                        },
+                      ),
+                      Gap(8),
+                    ],
+                  ),
+
+                  controller: _controller,
+                ),
+                Gap(17),
+                Row(
+                  children: [
+                    ...[
+                      {"title": "visual identity", "flex": 2},
+                      {"title": "painting", "flex": 1},
+                      {"title": "coding", "flex": 1},
+                      {"title": "Writing", "flex": 1},
+                    ].map(
+                      (json) => Expanded(
+                        flex: json["flex"] as int,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: CustomContainer(
+                            height: 40,
+                            color: AppColors.textformfill,
+                            child: Center(
+                              child: Text(
+                                json["title"] as String,
+                                style: TextStyles.textStyle12.copyWith(
+                                  color: AppColors.darkgrey,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Gap(17),
+                  ],
+                ),
+                Gap(17),
 
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  "Results",
-                  style: TextStyles.textStyle20.copyWith(
-                    fontWeight: FontWeight.w500,
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    "Results",
+                    style: TextStyles.textStyle20.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
 
-              Expanded(
-                child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, i) => CourseWidget(),
+                Expanded(
+                  child: BlocBuilder<SearchCubit, SearchState>(
+                    builder: (context, state) {
+                      if (state.status == SearchStatus.loading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (state.status == SearchStatus.failure) {
+                        return Center(child: Text('Error: ${state.error}'));
+                      }
+                      if (state.results.isEmpty) {
+                        return Center(child: Text('No results'));
+                      }
+                      return ListView.separated(
+                        itemCount: state.results.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
+                        itemBuilder: (context, i) {
+                          final c = state.results[i];
+                          return CourseWidget(
+                            title: c.title,
+                            imageUrl: c.imageUrl,
+                            price: c.price,
+                            heroTag: c.id,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
