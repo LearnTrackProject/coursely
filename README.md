@@ -161,5 +161,5 @@ For any questions or collaboration:
 
  
 
-وسأقوم بتنسيق ورفع النسخة النهائية الجاهزة على GitHub مباشرة.
+ 
 ```
