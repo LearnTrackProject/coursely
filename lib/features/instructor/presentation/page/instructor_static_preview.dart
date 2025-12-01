@@ -1,5 +1,6 @@
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:coursely/core/utils/app_colors.dart';
+import 'package:coursely/core/utils/responsive_size.dart';
 import 'package:flutter/material.dart';
 
 class InstructorStaticPreview extends StatelessWidget {
@@ -51,11 +52,13 @@ class InstructorStaticPreview extends StatelessWidget {
                     'Flutter for Beginners',
                     'assets/images/course_placeholder.png',
                     120,
+                    context,
                   ),
                   _courseCard(
                     'Advanced State Management',
                     'assets/images/course_placeholder.png',
                     180,
+                    context,
                   ),
                 ],
               ),
@@ -66,7 +69,12 @@ class InstructorStaticPreview extends StatelessWidget {
     );
   }
 
-  Widget _courseCard(String title, String image, int price) {
+  Widget _courseCard(
+    String title,
+    String image,
+    int price,
+    BuildContext context,
+  ) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
@@ -105,9 +113,9 @@ class InstructorStaticPreview extends StatelessWidget {
             Wrap(
               spacing: 6,
               children: [
-                _lessonChip('Intro'),
-                _lessonChip('Widgets'),
-                _lessonChip('State Management'),
+                _lessonChip('Intro', context),
+                _lessonChip('Widgets', context),
+                _lessonChip('State Management', context),
               ],
             ),
           ],
@@ -116,10 +124,13 @@ class InstructorStaticPreview extends StatelessWidget {
     );
   }
 
-  Widget _lessonChip(String title) {
+  Widget _lessonChip(String title, BuildContext context) {
     return Chip(
       label: Text(title),
-      avatar: const Icon(Icons.play_arrow, size: 16),
+      avatar: Icon(
+        Icons.play_arrow,
+        size: ResponsiveSize.getIconSize(context, baseSize: 16),
+      ),
     );
   }
 }

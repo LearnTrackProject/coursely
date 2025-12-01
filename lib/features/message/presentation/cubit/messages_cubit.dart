@@ -57,7 +57,10 @@ class MessagesCubit extends Cubit<MessagesState> {
       if (isInst) {
         instCourses = await courseRepository.fetchCoursesByInstructor(uid);
       }
-      final anns = await repository.fetchAnnouncementsForUser(uid);
+
+      // Fetch notifications instead of announcements
+      final anns = await repository.fetchNotifications(uid);
+
       emit(
         state.copyWith(
           loading: false,

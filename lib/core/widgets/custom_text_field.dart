@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.suffixIcon,
     this.preffixIcon,
+    this.maxLines = 1,
   });
 
   final TextEditingController controller;
@@ -16,11 +17,13 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final Widget? suffixIcon;
   final Widget? preffixIcon;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: AppColors.mediumGray),

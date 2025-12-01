@@ -17,6 +17,9 @@ import 'package:coursely/features/intro/splash_screen/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:coursely/features/welcome/welcome_screen.dart';
+import 'package:coursely/features/instructor/presentation/page/add_course_screen.dart';
+import 'package:coursely/features/my_courses/presentation/page/my_courses_screen.dart';
+import 'package:coursely/features/account/presentation/page/edit_profile_screen.dart';
 
 class Routes {
   static const String splashScreen = "/splash_screen";
@@ -31,6 +34,9 @@ class Routes {
   static const String courseDetailScreen = "/coursedetail_Screen";
   static const String verifyPhoneScreen = "/verifyPhone_Screen";
   static const String completeRegisterScreen = "/completeRegister_Screen";
+  static const String addCourse = "/add_course";
+  static const String myCourses = "/my_courses";
+  static const String editProfileScreen = "/edit_profile_screen";
 
   static var routes = GoRouter(
     initialLocation: splashScreen,
@@ -64,12 +70,6 @@ class Routes {
         },
       ),
       GoRoute(
-        path: mainScreen,
-        builder: (context, state) {
-          return MainScreen();
-        },
-      ),
-      GoRoute(
         path: verifyPhoneScreen,
         builder: (context, state) {
           return VerifyPhoneScreen();
@@ -77,15 +77,14 @@ class Routes {
       ),
       GoRoute(
         path: courseDetailScreen,
-
         builder: (context, state) {
-          // var items = state.extra as Map<String, dynamic>;
-
+          final extra = state.extra as Map<String, dynamic>?;
           return CourseDetailScreen(
-            heroTag: "1",
-            imageUrl: AppImages.image5,
-            price: 150,
-            title: "h1",
+            heroTag: extra?['heroTag'] as String?,
+            imageUrl: extra?['imageUrl'] as String?,
+            price: extra?['price'] as double?,
+            title: extra?['title'] as String?,
+            courseId: extra?['courseId'] as String?,
           );
         },
       ),
@@ -116,7 +115,6 @@ class Routes {
           );
         },
       ),
-
       GoRoute(
         path: welcome,
         builder: (context, state) {
@@ -130,6 +128,24 @@ class Routes {
             create: (context) => AuthCubit(),
             child: RegisterScreen(person: state.extra as UserTypeEnum),
           );
+        },
+      ),
+      GoRoute(
+        path: addCourse,
+        builder: (context, state) {
+          return const AddCourseScreen();
+        },
+      ),
+      GoRoute(
+        path: Routes.myCourses,
+        builder: (context, state) {
+          return const MyCoursesScreen();
+        },
+      ),
+      GoRoute(
+        path: editProfileScreen,
+        builder: (context, state) {
+          return const EditProfileScreen();
         },
       ),
     ],

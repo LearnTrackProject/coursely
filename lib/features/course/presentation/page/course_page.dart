@@ -8,12 +8,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:coursely/core/constants/routes.dart';
+import 'package:coursely/features/message/data/message_repository.dart';
 
 import '../../presentation/cubit/courses_cubit.dart';
 import '../../data/models/course.dart';
 
 class CoursePage extends StatefulWidget {
-  const CoursePage({super.key});
+  final VoidCallback? onSearchTap;
+  const CoursePage({super.key, this.onSearchTap});
 
   @override
   State<CoursePage> createState() => _CoursePageState();
@@ -77,7 +81,7 @@ class _CoursePageState extends State<CoursePage> {
     }
   }
 
-  Future<void> _enrollCourse(String courseId) async {
+  Future<void> _enrollCourse(String courseId, String courseTitle) async {
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) return;
@@ -85,6 +89,14 @@ class _CoursePageState extends State<CoursePage> {
       await FirebaseFirestore.instance.collection('student').doc(uid).update({
         'enrolledCourses': FieldValue.arrayUnion([courseId]),
       });
+
+      // Send notification
+      await MessageRepository().sendNotification(
+        userId: uid,
+        title: 'Course Enrollment',
+        body: 'You have successfully enrolled in $courseTitle',
+        courseId: courseId,
+      );
 
       setState(() {
         _enrolledCourses.add(courseId);
@@ -138,11 +150,16 @@ class _CoursePageState extends State<CoursePage> {
                   ],
                 ),
                 Gap(17),
-                CustomTextFormField(
-                  suffixIcon: Icon(Icons.toggle_on_sharp),
-                  preffixIcon: Icon(Icons.search),
-                  hintText: "Find Course",
-                  controller: _searchController,
+                GestureDetector(
+                  onTap: widget.onSearchTap,
+                  child: AbsorbPointer(
+                    child: CustomTextFormField(
+                      suffixIcon: Icon(Icons.toggle_on_sharp),
+                      preffixIcon: Icon(Icons.search),
+                      hintText: "Find Course",
+                      controller: _searchController,
+                    ),
+                  ),
                 ),
                 Gap(40),
                 Container(
@@ -259,7 +276,7 @@ class _CoursePageState extends State<CoursePage> {
                               return _buildCourseCard(
                                 course: c,
                                 isEnrolled: isEnrolled,
-                                onEnroll: () => _enrollCourse(c.id ?? ''),
+                                onEnroll: () => _enrollCourse(c.id, c.title),
                               );
                             },
                           );
@@ -291,7 +308,7 @@ class _CoursePageState extends State<CoursePage> {
                               return _buildCourseCard(
                                 course: c,
                                 isEnrolled: isEnrolled,
-                                onEnroll: () => _enrollCourse(c.id ?? ''),
+                                onEnroll: () => _enrollCourse(c.id, c.title),
                               );
                             },
                           );
@@ -364,19 +381,19 @@ class _CoursePageState extends State<CoursePage> {
               color: AppColors.lightSkyBlue,
             ),
             child: ListTile(
-              onTap: isEnrolled
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CourseVideoPlayer(
-                            courseId: course.id ?? '',
-                            courseTitle: course.title,
-                          ),
-                        ),
-                      );
-                    }
-                  : null,
+              onTap: () {
+                // Navigate to CourseDetailScreen
+                context.push(
+                  Routes.courseDetailScreen,
+                  extra: {
+                    'title': course.title,
+                    'imageUrl': course.imageUrl,
+                    'price': course.price,
+                    'heroTag': course.id ?? course.title,
+                    'courseId': course.id,
+                  },
+                );
+              },
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child:

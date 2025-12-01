@@ -24,6 +24,10 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _controller.addListener(() {
+      final q = _controller.text.trim();
+      context.read<SearchCubit>().search(q);
+    });
   }
 
   @override
@@ -49,7 +53,7 @@ class _SearchPageState extends State<SearchPage> {
             child: Column(
               children: [
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.centerRight,
                   child: Icon(Icons.dark_mode),
                 ),
                 Gap(20),
@@ -80,9 +84,10 @@ class _SearchPageState extends State<SearchPage> {
                       IconButton(
                         icon: Icon(Icons.filter_alt_outlined),
                         onPressed: () {
-                          showBottomSheet(
+                          showModalBottomSheet(
                             backgroundColor: AppColors.backGroundColor,
                             context: context,
+                            isScrollControlled: true,
                             builder: (_) {
                               return CustomButtonSheet();
                             },

@@ -1,10 +1,11 @@
 import 'package:coursely/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../models/lesson.dart';
+import 'package:coursely/features/course/data/models/lesson.dart';
 
 class LessonTile extends StatelessWidget {
   final Lesson lesson;
   final bool isPlaying;
+  final bool isLocked;
   final VoidCallback onPlay;
 
   const LessonTile({
@@ -12,6 +13,7 @@ class LessonTile extends StatelessWidget {
     required this.lesson,
     required this.onPlay,
     this.isPlaying = false,
+    this.isLocked = false,
   });
 
   @override
@@ -19,10 +21,10 @@ class LessonTile extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       leading: CircleAvatar(
-        backgroundColor: lesson.locked
+        backgroundColor: isLocked
             ? Colors.grey.shade300
             : AppColors.primaryColor,
-        child: lesson.locked
+        child: isLocked
             ? Icon(Icons.lock, color: Colors.grey.shade600)
             : Icon(
                 isPlaying ? Icons.stop : Icons.play_arrow,
@@ -31,14 +33,14 @@ class LessonTile extends StatelessWidget {
               ),
       ),
       title: Text(
-        '${lesson.index}. ${lesson.title}',
+        lesson.title,
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: lesson.locked ? Colors.grey.shade600 : Colors.black,
+          color: isLocked ? Colors.grey.shade600 : Colors.black,
         ),
       ),
       subtitle: Text(lesson.duration),
-      onTap: lesson.locked ? null : onPlay,
+      onTap: isLocked ? null : onPlay,
     );
   }
 }

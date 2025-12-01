@@ -76,13 +76,16 @@ class CourseRepository {
   /// Simple prefix search on course title.
   /// Uses range query with '\uf8ff' to emulate starts-with search.
   Future<List<Course>> searchCourses(String query, {int limit = 50}) async {
-    final q = query.trim();
+    final q = query.trim().toLowerCase();
     if (q.isEmpty) return [];
-    final end = '$q\uf8ff';
+
+    // Firestore prefix search on the 'title' field (case‑insensitive).
+    // It assumes that course titles are stored in lower case in Firestore.
     final snap = await _firestore
         .collection('courses')
-        .where('title', isGreaterThanOrEqualTo: q)
-        .where('title', isLessThanOrEqualTo: end)
+        .orderBy('title')
+        .startAt([q])
+        .endAt(['$q\uf8ff'])
         .limit(limit)
         .get();
     return snap.docs.map((d) => Course.fromMap(d.data(), id: d.id)).toList();

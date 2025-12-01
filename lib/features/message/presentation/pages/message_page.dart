@@ -8,48 +8,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/messages_cubit.dart';
 
 class MessagePage extends StatefulWidget {
-  final List<String> notification = [
-    "Successful purchase!",
-    "Congratulations on completing the  ...",
-    "Your course has been updated, you  ...",
-    "Congratulations, you have ...",
-  ];
-
-  final List<Map<String, String>> messages = [
-    {
-      "title": "mohamed hossam",
-      "desc":
-          "Congratulations on completing the first lesson,  keep up the good work!",
-    },
-    {
-      "title": "mazin",
-      "desc":
-          "Your course has been updated, you can check the new course in your study course.",
-    },
-    {"title": "menna", "desc": "Congratulations, you have completed your ..."},
-    {"title": "qassim", "desc": "Congratulations, you have completed your ..."},
-  ];
-  MessagePage({super.key});
+  const MessagePage({super.key});
 
   @override
   State<MessagePage> createState() => _MessagePageState();
 }
 
 class _MessagePageState extends State<MessagePage> {
-  late final TextEditingController titleController;
-  late final TextEditingController bodyController;
-  late final TextEditingController courseIdController;
-  late final TextEditingController videoController;
-  String? _selectedCourseId;
-
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController();
-    bodyController = TextEditingController();
-    courseIdController = TextEditingController();
-    videoController = TextEditingController();
-    // ensure messages are loaded when the page is shown
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
         context.read<MessagesCubit>().loadMessages();
@@ -58,310 +26,145 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   @override
-  void dispose() {
-    titleController.dispose();
-    bodyController.dispose();
-    courseIdController.dispose();
-    videoController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: DefaultTabController(
-          length: 2,
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Notifications",
-                  style: TextStyles.textStyle24.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+        body: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Notifications",
+                style: TextStyles.textStyle24.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              const Gap(20),
+              Expanded(
+                child: BlocBuilder<MessagesCubit, MessagesState>(
+                  builder: (context, state) {
+                    if (state.loading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (state.error != null) {
+                      return Center(child: Text('Error: ${state.error}'));
+                    }
 
-                TabBar(
-                  indicatorWeight: 0.1,
-                  dividerHeight: 0,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorPadding: EdgeInsets.symmetric(horizontal: 70),
-                  indicatorColor: AppColors.primaryColor,
-                  labelColor: AppColors.secondaryColor,
-                  unselectedLabelColor: Colors.black,
-                  unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w300),
-                  tabs: [
-                    Tab(child: Center(child: Text("message"))),
-
-                    Tab(child: Center(child: Text("notification"))),
-                    // Tab(child: Center(child: Text("data"))),
-                  ],
-                ),
-
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      BlocBuilder<MessagesCubit, MessagesState>(
-                        builder: (context, state) {
-                          if (state.loading)
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          if (state.error != null)
-                            return Center(child: Text('Error: ${state.error}'));
-
-                          final cubit = context.read<MessagesCubit>();
-
-                          return Column(
-                            children: [
-                              if (state.isInstructor) ...[
-                                // simple composer for instructor
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: state.instructorCourses.isNotEmpty
-                                      ? DropdownButtonFormField<String>(
-                                          value: _selectedCourseId,
-                                          decoration: InputDecoration(
-                                            labelText: 'Select Course',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                          items: state.instructorCourses
-                                              .map(
-                                                (c) => DropdownMenuItem(
-                                                  value: c.id,
-                                                  child: Text(c.title),
-                                                ),
-                                              )
-                                              .toList(),
-                                          onChanged: (v) {
-                                            setState(() {
-                                              _selectedCourseId = v;
-                                            });
-                                          },
-                                        )
-                                      : TextField(
-                                          controller: courseIdController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Course ID',
-                                            border: OutlineInputBorder(),
-                                          ),
-                                        ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: TextField(
-                                    controller: titleController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Title',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: TextField(
-                                    controller: videoController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Video URL (optional)',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: TextField(
-                                    controller: bodyController,
-                                    maxLines: 3,
-                                    decoration: InputDecoration(
-                                      labelText: 'Message body',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      final courseId =
-                                          _selectedCourseId ??
-                                          courseIdController.text.trim();
-                                      final title = titleController.text.trim();
-                                      final body = bodyController.text.trim();
-                                      final video = videoController.text.trim();
-                                      if (courseId.isEmpty ||
-                                          title.isEmpty ||
-                                          body.isEmpty)
-                                        return;
-                                      await cubit.sendAnnouncement(
-                                        courseId: courseId,
-                                        title: title,
-                                        body: body,
-                                        videoUrl: video.isEmpty ? null : video,
-                                      );
-                                      titleController.clear();
-                                      bodyController.clear();
-                                      courseIdController.clear();
-                                      videoController.clear();
-                                      setState(() {
-                                        _selectedCourseId = null;
-                                      });
-                                    },
-                                    child: Text('Send'),
-                                  ),
-                                ),
-                                SizedBox(height: 12),
-                              ],
-
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: state.announcements.length,
-                                  itemBuilder: (context, index) {
-                                    final a = state.announcements[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 10,
-                                      ),
-                                      child: MessageWidget(
-                                        title: a.title,
-                                        desc:
-                                            '${a.body}${a.videoUrl != null ? '\nVideo: ${a.videoUrl}' : ''}',
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      ListView.builder(
-                        itemCount: widget.notification.length,
-
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: CustomContainer(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.darkgrey.withValues(
-                                    alpha: 0.1,
-                                  ),
-                                  blurRadius: 20,
-                                  offset: Offset(0, 9),
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                              padding: EdgeInsets.all(8),
-                              width: double.infinity,
-                              color: AppColors.backGroundColor,
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    title: Text(
-                                      widget.notification[index],
-                                      maxLines: 1,
-                                      style: TextStyles.textStyle12.copyWith(
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                    subtitle: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.watch_later,
-                                          color: AppColors.gryColor,
-                                          size: 15,
-                                        ),
-                                        Gap(5),
-                                        Text(
-                                          "Just Now",
-                                          style: TextStyles.textStyle12
-                                              .copyWith(
-                                                fontWeight: FontWeight.w300,
-                                                color: AppColors.gryColor
-                                                    .withValues(alpha: 0.8),
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                    leading: CustomContainer(
-                                      color: AppColors.primaryColor.withValues(
-                                        alpha: 0.2,
-                                      ),
-                                      width: 50,
-                                      height: 50,
-                                      child: Icon(
-                                        Icons.notifications_active_outlined,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ),
-                                    trailing: Text("04:32 pm"),
-                                  ),
-                                ],
+                    if (state.announcements.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.notifications_none,
+                              size: 60,
+                              color: AppColors.gryColor.withValues(alpha: 0.5),
+                            ),
+                            const Gap(10),
+                            Text(
+                              "No notifications yet",
+                              style: TextStyles.textStyle14.copyWith(
+                                color: AppColors.gryColor,
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: state.announcements.length,
+                      itemBuilder: (context, index) {
+                        final notification = state.announcements[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: CustomContainer(
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.darkgrey.withValues(
+                                  alpha: 0.1,
+                                ),
+                                blurRadius: 20,
+                                offset: const Offset(0, 9),
+                                spreadRadius: 2,
+                              ),
+                            ],
+                            padding: const EdgeInsets.all(12),
+                            width: double.infinity,
+                            color: AppColors.backGroundColor,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomContainer(
+                                  color: AppColors.primaryColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  width: 40,
+                                  height: 40,
+                                  child: const Icon(
+                                    Icons.notifications_active_outlined,
+                                    color: AppColors.primaryColor,
+                                    size: 20,
+                                  ),
+                                ),
+                                const Gap(12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        notification.title,
+                                        style: TextStyles.textStyle14.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Gap(4),
+                                      Text(
+                                        notification.body,
+                                        style: TextStyles.textStyle12.copyWith(
+                                          color: AppColors.gryColor,
+                                        ),
+                                      ),
+                                      const Gap(8),
+                                      Text(
+                                        _formatDate(notification.createdAt),
+                                        style: TextStyles.textStyle12.copyWith(
+                                          fontSize: 10,
+                                          color: AppColors.gryColor.withValues(
+                                            alpha: 0.7,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
-}
 
-class MessageWidget extends StatelessWidget {
-  final String title;
-  final String desc;
-  const MessageWidget({super.key, required this.title, required this.desc});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomContainer(
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.darkgrey.withValues(alpha: 0.1),
-          blurRadius: 20,
-          offset: Offset(0, 9),
-          spreadRadius: 2,
-        ),
-      ],
-      padding: EdgeInsets.all(8),
-      width: double.infinity,
-      color: AppColors.backGroundColor,
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(
-              title,
-              style: TextStyles.textStyle14.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Text("online"),
-            leading: CustomContainer(
-              color: AppColors.primaryColor.withValues(alpha: 0.2),
-              width: 50,
-              height: 50,
-              child: Icon(Icons.message),
-            ),
-            trailing: Text("04:32 pm"),
-          ),
-
-          Text(
-            desc,
-            style: TextStyles.textStyle12.copyWith(color: AppColors.gryColor),
-          ),
-        ],
-      ),
-    );
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
+    if (diff.inMinutes < 60) {
+      return "${diff.inMinutes}m ago";
+    } else if (diff.inHours < 24) {
+      return "${diff.inHours}h ago";
+    } else {
+      return "${date.day}/${date.month}/${date.year}";
+    }
   }
 }

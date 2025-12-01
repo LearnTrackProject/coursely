@@ -9,6 +9,7 @@ class Student {
   String? bio;
   String? city;
   String? userKind;
+  String? profession;
   List<String>? enrolledCourses;
 
   Student({
@@ -22,6 +23,7 @@ class Student {
     this.city,
     this.gender,
     this.userKind,
+    this.profession,
     this.enrolledCourses,
   });
 
@@ -36,6 +38,7 @@ class Student {
     gender = json['gender'];
     age = json['age'];
     userKind = json['user_kind'];
+    profession = json['profession'];
     if (json['enrolledCourses'] is List) {
       enrolledCourses = List<String>.from(
         (json['enrolledCourses'] as List).map((e) => e.toString()),
@@ -57,6 +60,7 @@ class Student {
       'gender': gender,
       'age': age,
       'user_kind': userKind,
+      'profession': profession,
       'enrolledCourses': enrolledCourses ?? [],
     };
   }
@@ -72,6 +76,7 @@ class Student {
     if (gender != null) data['gender'] = gender;
     if (age != null) data['age'] = age;
     if (userKind != null) data['user_kind'] = userKind;
+    if (profession != null) data['profession'] = profession;
     if (enrolledCourses != null) data['enrolledCourses'] = enrolledCourses;
     return data;
   }

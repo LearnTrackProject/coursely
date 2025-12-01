@@ -125,6 +125,56 @@ class MessageRepository {
     return results;
   }
 
+  Future<void> sendNotification({
+    required String userId,
+    required String title,
+    required String body,
+    String? courseId,
+  }) async {
+    final doc = _firestore
+        .collection('student')
+        .doc(userId)
+        .collection('notifications')
+        .doc();
+
+    await doc.set({
+      'id': doc.id,
+      'title': title,
+      'body': body,
+      'courseId': courseId,
+      'createdAt': FieldValue.serverTimestamp(),
+      'read': false,
+    });
+  }
+
+  Future<List<Announcement>> fetchNotifications(String uid) async {
+    if (uid.isEmpty) return [];
+    try {
+      final snap = await _firestore
+          .collection('student')
+          .doc(uid)
+          .collection('notifications')
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snap.docs.map((d) {
+        final data = d.data();
+        return Announcement(
+          id: d.id,
+          instructorId: '', // Not relevant for system notifications
+          courseId: data['courseId'] as String? ?? '',
+          title: data['title'] as String? ?? '',
+          body: data['body'] as String? ?? '',
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        );
+      }).toList();
+    } catch (e) {
+      print('Error fetching notifications: $e');
+      return [];
+    }
+  }
+
   Future<bool> isInstructor(String uid) async {
     if (uid.isEmpty) return false;
     final doc = await _firestore.collection('instructor').doc(uid).get();

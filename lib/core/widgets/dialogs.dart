@@ -1,5 +1,6 @@
 import 'package:coursely/core/constants/navigation.dart';
 import 'package:coursely/core/utils/app_colors.dart';
+import 'package:coursely/core/utils/responsive_size.dart';
 import 'package:coursely/core/utils/text_styles.dart';
 import 'package:coursely/core/widgets/main_button.dart' show MainButton;
 import 'package:flutter/material.dart';
@@ -31,10 +32,19 @@ showMyDialog(BuildContext context, String message, DialogIconType messageType) {
           children: [
             Gap(20),
             messageType == DialogIconType.error
-                ? Icon(Icons.error_outline_sharp, size: 50)
+                ? Icon(
+                    Icons.error_outline_sharp,
+                    size: ResponsiveSize.getIconSize(context, baseSize: 50),
+                  )
                 : messageType == DialogIconType.info
-                ? Icon(Icons.info, size: 50)
-                : Image.asset("assets/images/success.png", width: 50),
+                ? Icon(
+                    Icons.info,
+                    size: ResponsiveSize.getIconSize(context, baseSize: 50),
+                  )
+                : Image.asset(
+                    "assets/images/success.png",
+                    width: ResponsiveSize.getIconSize(context, baseSize: 50),
+                  ),
             Gap(30),
             SizedBox(
               height: 50,

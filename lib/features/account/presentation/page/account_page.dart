@@ -15,6 +15,7 @@ import '../widgets/list_for_account.dart';
 
 import 'package:coursely/core/constants/app_images.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -51,45 +52,19 @@ class _AccountScreenState extends State<AccountScreen> {
                     Gap(40),
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: image != null
-                          ? FileImage(image!)
+                      backgroundImage:
+                          state.student?.imageUrl != null &&
+                              state.student!.imageUrl!.isNotEmpty
+                          ? NetworkImage(state.student!.imageUrl!)
                           : const AssetImage('assets/images/welcome.png')
                                 as ImageProvider,
-
                       backgroundColor: AppColors.gryColor,
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: AppColors.backGroundColor,
-                          child: IconButton(
-                            onPressed: () async {
-                              imagePicker = await ImagePicker().pickImage(
-                                source: ImageSource.gallery,
-                              );
-                              if (imagePicker != null) {
-                                final bytes = await File(
-                                  imagePicker?.path ?? "",
-                                ).readAsBytes();
-
-                                setState(() {
-                                  image = File(imagePicker?.path ?? "");
-                                });
-                              }
-                            },
-                            icon: Icon(
-                              Icons.camera_alt_outlined,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                     Center(
                       child: Text(
-                        state.user?.displayName ??
+                        state.student?.name ??
                             FirebaseAuth.instance.currentUser?.displayName ??
-                            "",
+                            "User",
                         style: TextStyles.textStyle24.copyWith(
                           fontWeight: FontWeight.bold,
                           fontFamily: "Poppins",
@@ -98,7 +73,13 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text("UIUX designer"),
+                    Text(
+                      state.student?.profession ?? "Student",
+                      style: TextStyles.textStyle14.copyWith(
+                        color: AppColors.gryColor,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -124,7 +105,9 @@ class _AccountScreenState extends State<AccountScreen> {
                           children: [
                             ListForAccount(
                               text: "Edit Profile",
-                              onTap: () {},
+                              onTap: () {
+                                context.push(Routes.editProfileScreen);
+                              },
                               icon: Icon(Icons.person),
                             ),
                             ListForAccount(

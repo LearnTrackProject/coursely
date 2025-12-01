@@ -1,8 +1,11 @@
 import 'package:coursely/core/constants/app_images.dart';
 import 'package:coursely/core/utils/app_colors.dart';
+import 'package:coursely/core/utils/responsive_size.dart';
 import 'package:coursely/core/utils/text_styles.dart';
+import 'package:coursely/core/constants/routes.dart';
 import 'package:coursely/core/widgets/custom_container.dart';
 import 'package:coursely/features/course_details/screens/course_detail_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -25,116 +28,137 @@ class CourseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8, right: 5, left: 5),
-      child: CustomContainer(
-        height: 80,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.darkgrey.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: Offset(0, 9),
-            spreadRadius: 2,
-          ),
-        ],
-        color: AppColors.backGroundColor,
-
-        child: ListTile(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CourseDetailScreen(
-                  title: title ?? 'Course',
-                  imageUrl: imageUrl,
-                  price: price,
-                  heroTag: heroTag ?? title ?? 'course_image',
-                  courseId: courseId,
-                ),
-              ),
-            );
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          Routes.courseDetailScreen,
+          extra: {
+            'title': title ?? 'Course',
+            'imageUrl': imageUrl,
+            'price': price,
+            'heroTag': heroTag ?? title ?? 'course_image',
+            'courseId': courseId,
           },
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.backGroundColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.darkgrey.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: (imageUrl != null && imageUrl!.startsWith('http'))
+                  ? Image.network(
+                      imageUrl!,
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                        AppImages.image6,
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Image.asset(
+                      imageUrl ?? AppImages.image6,
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+            ),
 
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: (imageUrl != null && imageUrl!.startsWith('http'))
-                ? Image.network(
-                    imageUrl!,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  )
-                : Image.asset(
-                    imageUrl ?? AppImages.image6,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  ),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title ?? "Product Design v1.0",
-                  style: TextStyles.textStyle14,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+            // Content
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      CupertinoIcons.person_fill,
-                      color: AppColors.gryColor,
-                      size: 15,
+                    Text(
+                      title ?? "Course Title",
+                      style: TextStyles.textStyle14.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Gap(4),
-                    Expanded(
-                      child: Text(
-                        "Robertson Connie",
-                        style: TextStyles.textStyle12.copyWith(
+                    const Gap(6),
+                    Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.person_fill,
                           color: AppColors.gryColor,
+                          size: ResponsiveSize.getIconSize(
+                            context,
+                            baseSize: 14,
+                          ),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                        const Gap(4),
+                        Expanded(
+                          child: Text(
+                            "Instructor Name", // Placeholder, ideally passed in
+                            style: TextStyles.textStyle12.copyWith(
+                              color: AppColors.gryColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        price != null
-                            ? "\$${price!.toStringAsFixed(0)}"
-                            : "\$190",
-                        style: TextStyles.textStyle16.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Gap(10),
-                      CustomContainer(
-                        padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                        color: AppColors.orange.withValues(alpha: 0.2),
-                        child: Text(
-                          "16 hours",
-                          style: TextStyles.textStyle12.copyWith(
-                            color: AppColors.orange,
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          price != null
+                              ? "\$${price!.toStringAsFixed(0)}"
+                              : "Free",
+                          style: TextStyles.textStyle16.copyWith(
+                            color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            "16h", // Placeholder
+                            style: TextStyles.textStyle12.copyWith(
+                              fontSize: 10,
+                              color: AppColors.orange,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

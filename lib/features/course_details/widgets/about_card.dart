@@ -1,4 +1,5 @@
 import 'package:coursely/core/utils/app_colors.dart';
+import 'package:coursely/core/utils/responsive_size.dart';
 import 'package:flutter/material.dart';
 
 class AboutCard extends StatelessWidget {
@@ -36,13 +37,17 @@ class AboutCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(Icons.timer, size: 18, color: AppColors.primaryColor),
+              Icon(
+                Icons.timer,
+                size: ResponsiveSize.getIconSize(context, baseSize: 18),
+                color: AppColors.primaryColor,
+              ),
               const SizedBox(width: 6),
               Text(duration, style: const TextStyle(color: Colors.black54)),
               const SizedBox(width: 20),
-              const Icon(
+              Icon(
                 Icons.play_circle_outline,
-                size: 18,
+                size: ResponsiveSize.getIconSize(context, baseSize: 18),
                 color: AppColors.primaryColor,
               ),
               const SizedBox(width: 6),

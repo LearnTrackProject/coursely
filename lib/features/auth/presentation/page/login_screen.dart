@@ -35,17 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is AuthSuccessState) {
           Navigation.pop(context);
-          if (cubit.userKind == "student" &&
-              widget.userType == UserTypeEnum.student) {
+          if (widget.userType == UserTypeEnum.student) {
             Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
-          } else if (cubit.userKind == "teacher" &&
-              widget.userType == UserTypeEnum.teacher) {
+          } else {
             Navigation.pushNamedandRemoveUntilTo(
               context,
               Routes.instructorDashboard,
             );
-          } else {
-            Navigation.pushNamedandRemoveUntilTo(context, Routes.mainScreen);
           }
         } else if (state is AuthErrorState) {
           Navigation.pop(context);
